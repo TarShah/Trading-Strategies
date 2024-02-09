@@ -95,16 +95,18 @@ void get_close(string symb){
 void get_short_ewm(int idx){
 	int start = idx - 11;
 	double ans = price[start];
+	double alph = (double)2/(double)13;
 	for(start;start<=idx;start++){
-		ans = (2/13)*(price[start] - ans) + ans;
+		ans = alph*(price[start] - ans) + ans;
 	}
 	short_ewm[idx] = ans; 
 }
 void get_long_ewm(int idx){
 	int start = idx - 25;
 	double ans = price[start];
+	double alph = (double)2/(double)27;
 	for(start;start<=idx;start++){
-		ans = (2/27)*(price[start] - ans) + ans;
+		ans = alph*(price[start] - ans) + ans;
 	}
 	long_ewm[idx] = ans;
 }
@@ -116,8 +118,9 @@ void get_macd(int idx){
 void get_sig(int idx){
 	int start = idx - 8;
 	double ans = macd[start];
+	double alph = (double)2/(double)10;
 	for(start;start<=idx;start++){
-		ans = (2/10)*(macd[start] - ans) + ans;
+		ans = alph*(macd[start] - ans) + ans;
 	}
 	sig[idx] = ans;
 }
