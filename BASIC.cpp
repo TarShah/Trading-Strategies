@@ -103,16 +103,27 @@ void solve(int argc,char* argv[]){
 			break;
 		}
 	}
-	start -= n-1;
 	ll position = 0;
 	ll trend = 0;
 	double cash = 0;
+	for(int i = start - (n-1);i<start;i++){
+		if(price[i] > price[i-1]){
+			trend = max(trend,0LL);
+			trend++;
+		}
+		else if(price[i] < price[i-1]){
+			trend = min(trend,0LL);
+			trend--;
+		}
+		else if(price[i] == price[i-1]){
+			trend = 0;
+		}
+	}
 	ofstream order("order_statistics.csv");
 	ofstream cashflow("daily_cashflow.csv");
 	// Signal for writing into the daily_cashflow file
 	bool sig = false;
 	for(start;start<len(dates);start++){
-		if(dates[start]==start_date) sig = true;
 		// Checking the trend
 		if(price[start] > price[start-1]){
 			trend = max(trend,0LL);
@@ -140,7 +151,7 @@ void solve(int argc,char* argv[]){
 				order<<dates[start]<<","<<"SELL"<<","<<1<<","<<price[start]<<endl;
 			}
 		}
-		if(sig) cashflow<<dates[start]<<','<<cash<<endl;
+		cashflow<<dates[start]<<','<<cash<<endl;
 	}
 	// Squaring off 
 	cash += price[len(price)-1]*position;
