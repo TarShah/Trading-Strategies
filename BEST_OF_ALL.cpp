@@ -34,7 +34,7 @@ void* DMA(void* arg) {
 void* DMAplus(void* arg) {
     string command = "g++ DMA++.cpp -o DMA++";
    //     ./DMA++ $(symbol) $(n) $(x) $(p) $(max_hold_days) $(c1) $(c2) "$(start_date)";
-    string execution = "./DMA++ "+symbol+" 14 5 5 28 2 0.2"+start_date+" dma++";
+    string execution = "./DMA++ "+symbol+" 14 5 5 28 2 0.2 "+start_date+" dma++";
     system(&command[0]);
     system(&execution[0]);
     string executable = "DMA++";
@@ -45,7 +45,7 @@ void* DMAplus(void* arg) {
 void* MACD(void* arg) {
     string command = "g++ MACD.cpp -o MACD";
     //./MACD $(symbol) $(x) "$(start_date)";
-    string execution = "./MACD "+symbol+" 5"+start_date+" macd";
+    string execution = "./MACD "+symbol+" 5 "+start_date+" macd";
     system(&command[0]);
     system(&execution[0]);
     string executable = "MACD";
@@ -55,9 +55,10 @@ void* MACD(void* arg) {
 
 void* RSI(void* arg) {
     string command = "g++ RSI.cpp -o RSI";
+   // ./RSI $(symbol) $(n) $(x) $(oversold_threshold) $(overbought_threshold) "$(start_date)";
 //    symbol=SBIN x=3 n=14 oversold_threshold=30 overbought_threshold=70
 //    start_date="a"
-    string execution = "./RSI "+symbol+" 5 14 30 70 "+start_date+" rsi";
+    string execution = "./RSI "+symbol+" 14 5 30 70 "+start_date+" rsi";
     system(&command[0]);
     system(&execution[0]);
     string executable = "RSI";
