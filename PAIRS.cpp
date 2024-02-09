@@ -57,10 +57,7 @@ void extract_data(string symbol,string column_name,vector<string>& column){
             }
         }
     }
-//    for (const auto& value : column) {
-//        std::cout << value << std::endl;
-//    }
-    
+
     
 }
 
@@ -105,16 +102,15 @@ void solve(string start,string end,int period,long double threshold, string symb
     daily_cashflow<<"Date,Cashflow\n";
     order_statistics_2<<"Date,Order_dir,Quantity,Price\n";
     order_statistics_1<<"Date,Order_dir,Quantity,Price\n";
-    int  i = 0;
     while(date[index]<=end_date and index<date.size()){
         long double mean  = sum/period;
-        long double standard_deviation = sqrt((sum_power_2/period)-mean);
+        long double standard_deviation = sqrt((sum_power_2/period)-(mean*mean));
         long double z_score = (spread[index]-mean)/standard_deviation;
         
         long double cash_flow = 0;
         
         if(z_score>threshold){
-            if(pos_stock_1<-x and pos_stock_2<x){
+            if(pos_stock_1>-x and pos_stock_2<x){
                 order_statistics_1<<change_format_ddmmyyyy(date[index]);
                 order_statistics_1<<",";
                 order_statistics_1<<"SELL,1,";
@@ -172,11 +168,7 @@ void solve(string start,string end,int period,long double threshold, string symb
         index++;
         sum+=spread[index];
         sum_power_2+=(spread[index]*spread[index]);
-        i++;
-        if(i==167){
-            
-        }
-        
+       
     }
     
     index--;
