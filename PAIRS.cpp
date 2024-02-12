@@ -5,12 +5,13 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
+
 using namespace std;
 
 vector<string> date;
-vector<long double> spread;
-vector<long double> price_1;
-vector<long double> price_2;
+vector<double> spread;
+vector<double> price_1;
+vector<double> price_2;
 
 // to change the dd/mm/yyyy to yyyy/mm/dd format
 string change_format_yyyymmdd(string start){
@@ -64,15 +65,15 @@ void extract_data(string symbol,string column_name,vector<string>& column){
     
 }
 
-void solve1(string start,string end,int period,long double threshold, string symbol_1, string symbol_2,long double x){
+void solve1(string start,string end,int period,double threshold, string symbol_1, string symbol_2,double x){
     
-    long double sum = 0; // to store the sum of spreads of last n(period) days
-    long double sum_power_2 = 0; // to store the sum of square of spreads of last n(period) days
+    double sum = 0; // to store the sum of spreads of last n(period) days
+    double sum_power_2 = 0; // to store the sum of square of spreads of last n(period) days
     
     ofstream daily_cashflow("daily_cashflow.csv");
     ofstream order_statistics_1("order_statistics_1.csv");
     ofstream order_statistics_2("order_statistics_2.csv");
-    long double net_change = 0;
+    double net_change = 0;
     
     // below is to convert to yyyy/mm/dd format
     string start_date = change_format_yyyymmdd(start);
@@ -108,14 +109,16 @@ void solve1(string start,string end,int period,long double threshold, string sym
     order_statistics_1<<"Date,Order_dir,Quantity,Price\n";
     
     
-    
-    int  i = 0;
+   
     while(date[index]<=end_date and index<date.size()){
-        long double mean  = sum/period;
-        long double standard_deviation = sqrt((sum_power_2/period)-(mean*mean));
-        long double z_score = (spread[index]-mean)/standard_deviation;
-        long double cash_flow = 0;
         
+        
+        double mean  = sum/period;
+        double standard_deviation = sqrt((sum_power_2/period)-(mean*mean));
+        double z_score = (spread[index]-mean)/standard_deviation;
+        double cash_flow = 0;
+        
+       // cout<<date[index]<<" "<<sum<<" "<<sum_power_2<<" "<<mean<<" "<<standard_deviation<<" "<<z_score<<endl;
         
         if(z_score>threshold){
             if(pos_stock_1>-x and pos_stock_2<x){
@@ -128,7 +131,7 @@ void solve1(string start,string end,int period,long double threshold, string sym
                 order_statistics_2<<change_format_ddmmyyyy(date[index]);
                 order_statistics_2<<",";
                 order_statistics_2<<"BUY,1,";
-                order_statistics_2<<price_1[index];
+                order_statistics_2<<price_2[index];
                 order_statistics_2<<"\n";
                 
                 cash_flow+=price_1[index];
@@ -148,7 +151,7 @@ void solve1(string start,string end,int period,long double threshold, string sym
                 order_statistics_2<<change_format_ddmmyyyy(date[index]);
                 order_statistics_2<<",";
                 order_statistics_2<<"SELL,1,";
-                order_statistics_2<<price_1[index];
+                order_statistics_2<<price_2[index];
                 order_statistics_2<<"\n";
                 
                 
@@ -164,12 +167,14 @@ void solve1(string start,string end,int period,long double threshold, string sym
         
         
         // updating daily_cash_flow
-        daily_cashflow<<change_format_ddmmyyyy(date[index]);
-        daily_cashflow<<",";
-        daily_cashflow<<cash_flow;
-        daily_cashflow<<"\n";
         
         net_change+=cash_flow;
+        
+        daily_cashflow<<change_format_ddmmyyyy(date[index]);
+        daily_cashflow<<",";
+        daily_cashflow<<to_string(net_change);
+        daily_cashflow<<"\n";
+        
         
         sum-= spread[index-period+1];
         sum_power_2-=(spread[index-period+1]*spread[index-period+1]);
@@ -186,7 +191,7 @@ void solve1(string start,string end,int period,long double threshold, string sym
     
     
     ofstream final_pnl("final_pnl.txt");
-    final_pnl<<net_change<<endl;
+    final_pnl<<to_string(net_change)<<endl;
     
     
     
@@ -216,9 +221,9 @@ void fill_data(string symbol_1, string symbol_2)
     while((index_1<dum_dates_1.size()) and (index_2<dum_dates_2.size())){
         if(dum_dates_1[index_1]==dum_dates_2[index_2]){
             date.push_back(dum_dates_1[index_1]);
-            price_1.push_back(stold(dum_price_1[index_1]));
-            price_2.push_back(stold(dum_price_2[index_2]));
-            spread.push_back(stold(dum_price_1[index_1])-stold(dum_price_2[index_2]));
+            price_1.push_back(stod(dum_price_1[index_1]));
+            price_2.push_back(stod(dum_price_2[index_2]));
+            spread.push_back(stod(dum_price_1[index_1])-stod(dum_price_2[index_2]));
             index_1++;
             index_2++;
         }
@@ -239,15 +244,15 @@ void fill_data(string symbol_1, string symbol_2)
 }
 
 
-void solve2(string start,string end,int period,long double threshold, string symbol_1, string symbol_2,long double x,long double stop_loss){
+void solve2(string start,string end,int period,double threshold, string symbol_1, string symbol_2,double x,double stop_loss){
     
-    long double sum = 0; // to store the sum of spreads of last n(period) days
-    long double sum_power_2 = 0; // to store the sum of square of spreads of last n(period) days
+    double sum = 0; // to store the sum of spreads of last n(period) days
+    double sum_power_2 = 0; // to store the sum of square of spreads of last n(period) days
     
     ofstream daily_cashflow("daily_cashflow.csv");
     ofstream order_statistics_1("order_statistics_1.csv");
     ofstream order_statistics_2("order_statistics_2.csv");
-    long double net_change = 0;
+    double net_change = 0;
     
     // below is to convert to yyyy/mm/dd format
     string start_date = change_format_yyyymmdd(start);
@@ -281,17 +286,17 @@ void solve2(string start,string end,int period,long double threshold, string sym
     daily_cashflow<<"Date,Cashflow\n";
     order_statistics_2<<"Date,Order_dir,Quantity,Price\n";
     order_statistics_1<<"Date,Order_dir,Quantity,Price\n";
-    int  i = 0;
+  
     
     
-    vector<vector<long double>> previous_data; // {a,mean,standard_deviation} if a = 1 then sell signal else if a = 0 then but signal
+    vector<vector<double>> previous_data; // {a,mean,standard_deviation} if a = 1 then sell signal else if a = 0 then but signal
     int cur_previous_index = 0; // starting index for data to be analyzed
     
     while(date[index]<=end_date and index<date.size()){
-        long double mean  = sum/period;
-        long double standard_deviation = sqrt((sum_power_2/period)-(mean*mean));
-        long double z_score = (spread[index]-mean)/standard_deviation;
-        long double cash_flow = 0;
+        double mean  = sum/period;
+        double standard_deviation = sqrt((sum_power_2/period)-(mean*mean));
+        double z_score = (spread[index]-mean)/standard_deviation;
+        double cash_flow = 0;
         
         
         int signal_type = -1; // if it is 1 then sell signal else if it is 0 buy signal
@@ -337,9 +342,10 @@ void solve2(string start,string end,int period,long double threshold, string sym
             }
             
         }
-        vector<vector<long double>> new_previous_data;
-        for(int i = cur_previous_index;i<previous_data.size();i++){
-            long double new_z_score = (spread[index]-previous_data[cur_previous_index][1])/previous_data[cur_previous_index][2];
+        vector<vector<double>> new_previous_data;
+        for(int i = cur_previous_index;i<previous_data.size();i++)
+        {
+            double new_z_score = (spread[index]-previous_data[cur_previous_index][1])/previous_data[cur_previous_index][2];
             if(abs(new_z_score)>abs(stop_loss))
             {
                 if(previous_data[cur_previous_index][0]==1)
@@ -359,15 +365,19 @@ void solve2(string start,string end,int period,long double threshold, string sym
         }
         cur_previous_index = 0;
         previous_data = new_previous_data;
-        if(quan_buy>quan_sell){
+        
+        if(quan_buy>quan_sell)
+        {
             quan_buy-=quan_sell;
             quan_sell=0;
         }
-        else{
+        else
+        {
             quan_sell-=quan_buy;
             quan_buy=0;
         }
-        if(quan_sell>0){
+        if(quan_sell>0)
+        {
             if(pos_stock_1>-x and pos_stock_2<x)
             {
                 order_statistics_1<<change_format_ddmmyyyy(date[index]);
@@ -383,7 +393,7 @@ void solve2(string start,string end,int period,long double threshold, string sym
                 order_statistics_2<<"BUY,";
                 order_statistics_2<<quan_sell;
                 order_statistics_2<<",";
-                order_statistics_2<<price_1[index];
+                order_statistics_2<<price_2[index];
                 order_statistics_2<<"\n";
                 
                 cash_flow+=(price_1[index]*quan_sell);
@@ -407,7 +417,7 @@ void solve2(string start,string end,int period,long double threshold, string sym
                 order_statistics_2<<"SELL,";
                 order_statistics_2<<quan_buy;
                 order_statistics_2<<",";
-                order_statistics_2<<price_1[index];
+                order_statistics_2<<price_2[index];
                 order_statistics_2<<"\n";
                 
                 
@@ -421,15 +431,15 @@ void solve2(string start,string end,int period,long double threshold, string sym
         }
         
         
-        
+        net_change+=cash_flow;
         
         // updating daily_cash_flow
         daily_cashflow<<change_format_ddmmyyyy(date[index]);
         daily_cashflow<<",";
-        daily_cashflow<<cash_flow;
+        daily_cashflow<<to_string(net_change);
         daily_cashflow<<"\n";
         
-        net_change+=cash_flow;
+        
         
         sum-= spread[index-period+1];
         sum_power_2-=(spread[index-period+1]*spread[index-period+1]);
@@ -446,7 +456,7 @@ void solve2(string start,string end,int period,long double threshold, string sym
     
     
     ofstream final_pnl("final_pnl.txt");
-    final_pnl<<net_change<<endl;
+    final_pnl<<to_string(net_change)<<endl;
     
     
     
@@ -461,17 +471,19 @@ void solve2(string start,string end,int period,long double threshold, string sym
 
 int main(int argc, char * argv[]) {
     
-    
+    //symbol1=SBIN symbol2=ADANIENT x=5 n=20 threshold=2 start_date="01/01/2023" end_date="01/01/2024"
     // command line would be ./a.out symbol_1 symbol_2 start_date end_date n x threshold
     string symbol_1 = string(argv[1]);
     string symbol_2 = string(argv[2]);
     string start_date = string(argv[3]);
     string end_date = string(argv[4]);
     int n = stoi(string(argv[5]));
-    long double x = stold(string(argv[6]));
-    long double threshold = stold(string(argv[7]));
+    double x = stod(string(argv[6]));
+    double threshold = stod(string(argv[7]));
     
     fill_data(symbol_1,symbol_2);
+    
+ 
     
     if(argc== 8 or (string(argv[8])==""))
     {
@@ -479,20 +491,11 @@ int main(int argc, char * argv[]) {
     }
     else
     {
-        long double stop_loss_threshold = stold(string(argv[8]));
-        cout<<"here"<<endl;
+        double stop_loss_threshold = stod(string(argv[8]));
         solve2(start_date, end_date, n, threshold, symbol_1, symbol_2, x,stop_loss_threshold);
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    cout << "finished !\n";
+ 
     
     return 0;
 }
