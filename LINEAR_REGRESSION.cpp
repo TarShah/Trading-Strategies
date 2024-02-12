@@ -243,6 +243,7 @@ vector<double> train(string train_start_date, string start_date, string symb){
 			cout<<cell<<" ";
 		}
     }
+    cout<<endl;
 	return Y_test_transpose.a[0];
 }
 void solve(int argc,char* argv[]){
@@ -254,6 +255,8 @@ void solve(int argc,char* argv[]){
 	double p = stod(argv[3]);
 	string train_start_date = string(argv[4]);
 	string start_date = string(argv[5]); 
+	string name = string(argv[6]);
+	cout<<train_start_date<<" "<<start_date<<endl;
 	int start = 0;
 	for(int i=0;i<len(dates);i++){
 		if(comparable(dates[i]) >= comparable(start_date)){
@@ -265,8 +268,8 @@ void solve(int argc,char* argv[]){
 	ll offset = start; 
 	ll position = 0;
 	double cash = 0;
-	ofstream order("order_statistics.csv");
-	ofstream cashflow("daily_cashflow.csv");
+	ofstream order(name+"order_statistics.csv");
+	ofstream cashflow(name+"daily_cashflow.csv");
 	order<<"Date,Order_dir,Quantity,Price"<<endl;
 	cashflow<<"Date,Cashflow"<<endl;
 	for(start;start<len(dates);start++){
@@ -291,7 +294,7 @@ void solve(int argc,char* argv[]){
 	order.close();
 	cashflow.close();
 	// Writing the final pnl
-	ofstream pnl("final_pnl.txt");
+	ofstream pnl(name+"final_pnl.txt");
 	pnl<<cash<<endl;
 	pnl.close();
 }
