@@ -37,6 +37,9 @@ all:
 		python3 get.py $(symbol2) "$(start_date)" "$(end_date)" $(shell echo $$(($(n)*3 + 10))); \
 		g++ PAIRS.cpp -o PAIRS; \
 		./PAIRS $(symbol1) $(symbol2) "$(start_date)" "$(end_date)" $(n) $(x) $(threshold) $(stop_loss_threshold) ; \
+	elif [ "$(strategy)" = "BEST_OF_ALL" ]; then \
+		g++ BEST_OF_ALL.cpp -o BEST_OF_ALL; \
+		./BEST_OF_ALL $(symbol) "$(start_date)" "$(end_date)"; \
 	fi
 
 # Clean rule
