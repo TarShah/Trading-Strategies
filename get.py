@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime
+from datetime import datetime,timedelta
 from jugaad_data.nse import stock_df
 
 #to change year to current year -1 
