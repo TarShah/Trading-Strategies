@@ -1,9 +1,4 @@
-#include <iostream>
-#include <pthread.h>
-#include <format>
-#include <cstdlib>
-#include <fstream>
-#include <cstdio>
+#include <bits/stdc++.h>
 using namespace std;
 string start_date ="";
 string symbol = "";
@@ -68,10 +63,8 @@ void* RSI(void* arg) {
 
 void* ADX(void* arg) {
     string command = "g++ ADX.cpp -o ADX";
-//    make strategy="LINEAR_REGRESSION" symbol=SBIN x=3 p=2 train_start_date="a"
-//    train_end_date="b" start_date="c" end_date="d"
-    
-    string execution = "./ADX "+symbol+" 5 14 25 "+start_date+" rsi";
+ // ./ADX $(symbol) $(n) $(x) $(adx_threshold) "$(start_date)"; 
+    string execution = "./ADX "+symbol+" 14 5 25 "+start_date+" adx";
     system(&command[0]);
     system(&execution[0]);
     string executable = "ADX";
@@ -80,17 +73,23 @@ void* ADX(void* arg) {
 }
 
 void* LINEAR_REGRESSION(void* arg) {
-    string command = "g++ LINEAR_REGRESSION.cpp -o LINEAR_REGRESSION";
     
-//    make strategy="LINEAR_REGRESSION" symbol=SBIN x=3 p=2 train_start_date="a"
-//    train_end_date="b" start_date="c"
+    string command = "g++ LINEAR_REGRESSION.cpp -o LINEAR_REGRESSION";
+
+//    python3 linear.py $(symbol) "$(train_start_date)" "$(train_end_date)" "train"; 
+// 		./LINEAR_REGRESSION $(symbol) $(x) $(p) "$(train_start_date)" "$(start_date)"; 
+
     string train_start_date = start_date.substr(0,6)+to_string(stoi(start_date.substr(6,4))-1);
     string train_end_date = start_date.substr(0,6)+to_string(stoi(end_date.substr(6,4))-1);
-    string execution = "./LINEAR_REGRESSION "+symbol+" 5 p "+train_start_date+" "+train_end_date+" "+ start_date+" linear_regression";
+    string training_data = "python3 linear.py "+symbol+" " +train_start_date+" "+ train_end_date +" train" ;
+    system(&training_data[0]);
+    string execution = "./LINEAR_REGRESSION "+symbol+" 5 2 "+train_start_date+" "+ start_date+" linear_regression";
     system(&command[0]);
     system(&execution[0]);
     string executable = "LINEAR_REGRESSION";
+    string train_name = "train.csv";
     remove(&executable[0]);
+    remove(&train_name[0]);
     return NULL;
 }
 
@@ -125,7 +124,9 @@ int main(int argc, const char * argv[]) {
     pthread_join(thread2, NULL);
     pthread_join(thread3, NULL);
     pthread_join(thread4, NULL);
-    // Join other threads as well
+   pthread_join(thread5, NULL);
+   pthread_join(thread6, NULL);
+   pthread_join(thread7, NULL);
     
     
     vector<pair<long double,string>> net_gains;
@@ -133,6 +134,9 @@ int main(int argc, const char * argv[]) {
         ifstream cur(name+"final_pnl.txt");
         string intermediate = "";
         cur>>intermediate;
+
+        cout<<name<<endl;
+        cout<<intermediate<<endl;
         net_gains.push_back({stold(intermediate),name});
     }
     sort(net_gains.begin(),net_gains.end());
