@@ -22,6 +22,15 @@ string change_date_rep(string date){
 	new_date += date.substr(0,4); 
 	return new_date;
 }
+string comparable(string date){
+	string conv = "";
+	conv += date.substr(6,4);
+	conv += "-"; 
+	conv += date.substr(3,2);
+	conv += "-";
+	conv += date.substr(0,2);
+	return conv;
+}
 void get_dates(string symb){
 	string line;
     ifstream file(symb + ".csv"); 
@@ -98,7 +107,7 @@ void solve(int argc,char* argv[]){
 	string start_date = argv[4];
 	int start = 0;
 	for(int i=0;i<len(dates);i++){
-		if(dates[i] == start_date){
+		if(comparable(dates[i]) >= comparable(start_date)){
 			start = i;
 			break;
 		}
@@ -121,8 +130,8 @@ void solve(int argc,char* argv[]){
 	}
 	ofstream order("order_statistics.csv");
 	ofstream cashflow("daily_cashflow.csv");
-	// Signal for writing into the daily_cashflow file
-	bool sig = false;
+	order<<"Date,Order_dir,Quantity,Price"<<endl;
+	cashflow<<"Date,Cashflow"<<endl;
 	for(start;start<len(dates);start++){
 		// Checking the trend
 		if(price[start] > price[start-1]){
@@ -141,17 +150,17 @@ void solve(int argc,char* argv[]){
 			if(position < x){
 				position++;
 				cash -= price[start];
-				order<<dates[start]<<","<<"BUY"<<","<<1<<","<<price[start]<<endl;
+				order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
 			}
 		}
 		if(trend <= -n){
 			if(position > -x){
 				position--;
 				cash += price[start];
-				order<<dates[start]<<","<<"SELL"<<","<<1<<","<<price[start]<<endl;
+				order<<dates[start]<<","<<"SELL"<<","<<1<<","<<to_string(price[start])<<endl;
 			}
 		}
-		cashflow<<dates[start]<<','<<cash<<endl;
+		cashflow<<dates[start]<<','<<to_string(cash)<<endl;
 	}
 	// Squaring off 
 	cash += price[len(price)-1]*position;
@@ -159,7 +168,7 @@ void solve(int argc,char* argv[]){
 	cashflow.close();
 	// Writing the final pnl
 	ofstream pnl("final_pnl.txt");
-	pnl<<cash<<endl;
+	pnl<<to_string(cash)<<endl;
 	pnl.close();
 }
 int main(int argc, char*  argv[]){

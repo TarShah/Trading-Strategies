@@ -13,10 +13,6 @@ using namespace std;
 #endif
 vector<string> dates;
 vector<double> price;
-vector<double> macd;
-vector<double> sig;
-vector<double> short_ewm;
-vector<double> long_ewm;
 string change_date_rep(string date){
 	string new_date = "";
 	new_date += date.substr(8,2);
@@ -25,6 +21,15 @@ string change_date_rep(string date){
 	new_date += "/";
 	new_date += date.substr(0,4); 
 	return new_date;
+}
+string comparable(string date){
+	string conv = "";
+	conv += date.substr(6,4);
+	conv += "-"; 
+	conv += date.substr(3,2);
+	conv += "-";
+	conv += date.substr(0,2);
+	return conv;
 }
 void get_dates(string symb){
 	string line;
@@ -92,80 +97,50 @@ void get_close(string symb){
 		}
 	}
 }
-void get_short_ewm(int idx){
-	int start = idx - 11;
-	double ans = price[start];
-	double alph = (double)2/(double)13;
-	for(start;start<=idx;start++){
-		ans = alph*(price[start] - ans) + ans;
-	}
-	short_ewm[idx] = ans; 
-}
-void get_long_ewm(int idx){
-	int start = idx - 25;
-	double ans = price[start];
-	double alph = (double)2/(double)27;
-	for(start;start<=idx;start++){
-		ans = alph*(price[start] - ans) + ans;
-	}
-	long_ewm[idx] = ans;
-}
-void get_macd(int idx){
-	get_short_ewm(idx);
-	get_long_ewm(idx);
-	macd[idx] = short_ewm[idx] - long_ewm[idx]; 
-}
-void get_sig(int idx){
-	int start = idx - 8;
-	double ans = macd[start];
-	double alph = (double)2/(double)10;
-	for(start;start<=idx;start++){
-		ans = alph*(macd[start] - ans) + ans;
-	}
-	sig[idx] = ans;
-}
 void solve(int argc,char* argv[]){
 	get_close(string(argv[1]));
 	get_dates(string(argv[1]));
-	sig.resize(len(dates),0);
-	macd.resize(len(dates),0);
-	short_ewm.resize(len(dates),0);
-	long_ewm.resize(len(dates),0);
 	reverse(all(dates));
 	reverse(all(price));
 	int x = stoi(argv[2]);
 	string start_date = argv[3];
 	int start = 0;
 	for(int i=0;i<len(dates);i++){
-		if(dates[i] == start_date){
+		if(comparable(dates[i]) >= comparable(start_date)){
 			start = i;
 			break;
 		}
 	}
-	for(int i = start-20;i<start;i++) get_macd(i);
+	double sig = 0;
+	double macd = 0;
+	double short_ewm = price[start];
+	double long_ewm = price[start];
 	ll position = 0;
 	double cash = 0;
 	ofstream order("order_statistics.csv");
 	ofstream cashflow("daily_cashflow.csv");
-	// Signal for writing into the daily_cashflow file
+	order<<"Date,Order_dir,Quantity,Price"<<endl;
+	cashflow<<"Date,Cashflow"<<endl;
 	for(start;start<len(dates);start++){
-		get_macd(start);
-		get_sig(start);
-		if(macd[start] > sig[start]){
+		long_ewm = ((double)2/(double)27)*(price[start] - long_ewm) + long_ewm;
+		short_ewm = ((double)2/(double)13)*(price[start] - short_ewm) + short_ewm;
+		macd = short_ewm - long_ewm;
+		sig = ((double)2/(double)10)*(macd - sig) + sig;  
+		if(macd > sig){
 			if(position < x){
 				position++;
 				cash -= price[start];
-				order<<dates[start]<<","<<"BUY"<<","<<1<<","<<price[start]<<endl;
+				order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
 			}
 		}
-		if(macd[start] < sig[start]){
+		if(macd < sig){
 			if(position > -x){
 				position--;
 				cash += price[start];
-				order<<dates[start]<<","<<"SELL"<<","<<1<<","<<price[start]<<endl;
+				order<<dates[start]<<","<<"SELL"<<","<<1<<","<<to_string(price[start])<<endl;
 			}
 		}
-		cashflow<<dates[start]<<','<<cash<<endl;
+		cashflow<<dates[start]<<','<<to_string(cash)<<endl;
 	}
 	// Squaring off 
 	cash += price[len(price)-1]*position;
@@ -173,7 +148,7 @@ void solve(int argc,char* argv[]){
 	cashflow.close();
 	// Writing the final pnl
 	ofstream pnl("final_pnl.txt");
-	pnl<<cash<<endl;
+	pnl<<to_string(cash)<<endl;
 	pnl.close();
 }
 int main(int argc, char*  argv[]){

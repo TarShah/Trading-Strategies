@@ -22,6 +22,15 @@ string change_date_rep(string date){
 	new_date += date.substr(0,4); 
 	return new_date;
 }
+string comparable(string date){
+	string conv = "";
+	conv += date.substr(6,4);
+	conv += "-"; 
+	conv += date.substr(3,2);
+	conv += "-";
+	conv += date.substr(0,2);
+	return conv;
+}
 void get_dates(string symb){
 	string line;
     ifstream file(symb + ".csv"); 
@@ -112,7 +121,7 @@ void solve(int argc,char* argv[]){
 	string start_date = argv[8];
 	int start = 0;
 	for(int i=0;i<len(dates);i++){
-		if(dates[i] == start_date){ // to change this.
+		if(comparable(dates[i]) >= comparable(start_date)){ // to change this.
 			start = i;
 			break;
 		}
@@ -125,10 +134,12 @@ void solve(int argc,char* argv[]){
 	double AMA = price[start];
 	double sum_abs_change = 0;
 	for(int i = start - (n-2);i<=start;i++){
-		sum_abs_change += abs(price[start] - price[start-1]);
+		sum_abs_change += abs(price[i] - price[i-1]);
 	}
 	ofstream order("order_statistics.csv");
 	ofstream cashflow("daily_cashflow.csv");
+	order<<"Date,Order_dir,Quantity,Price"<<endl;
+	cashflow<<"Date,Cashflow"<<endl;
 	cashflow<<dates[start]<<','<<cash<<endl;
 	queue<ord> q;
 	start++;
@@ -141,7 +152,7 @@ void solve(int argc,char* argv[]){
 		ER = price_change/sum_abs_change;
 		SF = get_SF(SF,ER,c1,c2);
 		AMA = AMA + SF*(price[start] - AMA);
-		//cout<<AMA<<" "<<ER<<" "<<SF<<endl;
+		cout<<dates[start]<<" "<<AMA<<" "<<ER<<" "<<SF<<endl;
 		if(price[start] >= AMA*((double)(100+p) / 100)) buy = true;
 		if(price[start] <= AMA*((double)(100-p) / 100)) sell = true;
 		if(!q.empty() and start - q.front().index == max_hold_days){
@@ -160,7 +171,8 @@ void solve(int argc,char* argv[]){
 				else{
 					q.pop();
 					cash += price[start];
-					order<<dates[start]<<","<<"SELL"<<","<<1<<","<<price[start]<<endl;
+					position--;
+					order<<dates[start]<<","<<"SELL"<<","<<1<<","<<to_string(price[start])<<endl;
 				}
 			}
 			if(held_buy){
@@ -171,7 +183,8 @@ void solve(int argc,char* argv[]){
 				else{
 					q.pop();
 					cash -= price[start];
-					order<<dates[start]<<","<<"BUY"<<","<<1<<","<<price[start]<<endl;
+					position++;
+					order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
 				}
 			}
 			buy = false;
@@ -182,22 +195,32 @@ void solve(int argc,char* argv[]){
 				if(position < x){
 					position++;
 					cash -= price[start];
-					order<<dates[start]<<","<<"BUY"<<","<<1<<","<<price[start]<<endl;
-					q.push(ord{"LONG",start});
+					order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
+					if(q.empty() or q.front().type=="LONG"){
+						q.push(ord{"LONG",start});
+					}
+					else{
+						q.pop();
+					}
 				}
 			}
 			if(sell){
 				if(position > -x){
 					position--;
 					cash += price[start];
-					order<<dates[start]<<","<<"SELL"<<","<<1<<","<<price[start]<<endl;
-					q.push(ord{"SHORT",start});
+					order<<dates[start]<<","<<"SELL"<<","<<1<<","<<to_string(price[start])<<endl;
+					if(q.empty() or q.front().type=="SHORT"){
+						q.push(ord{"SHORT",start});
+					}
+					else{
+						q.pop();
+					}
 				}
 			}
 		}
 		sum_abs_change -= abs(price[prev] - price[prev-1]);
 		prev++;
-		cashflow<<dates[start]<<','<<cash<<endl;
+		cashflow<<dates[start]<<','<<to_string(cash)<<endl;
 	}
 	// Squaring off 
 	cash += price[len(price)-1]*position;
@@ -205,7 +228,7 @@ void solve(int argc,char* argv[]){
 	cashflow.close();
 	// Writing the final pnl
 	ofstream pnl("final_pnl.txt");
-	pnl<<cash<<endl;
+	pnl<<to_string(cash)<<endl;
 	pnl.close();
 }
 int main(int argc, char*  argv[]){

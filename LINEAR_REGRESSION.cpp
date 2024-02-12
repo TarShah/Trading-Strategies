@@ -238,12 +238,11 @@ vector<double> train(string train_start_date, string start_date, string symb){
 	matrix X_test(test_vec);
 	matrix Y_test = X_test*B; 
 	matrix Y_test_transpose = Y_test.transpose();
-	//for(auto row : B.a){
-		//for(auto cell : row){
-			//cerr<<cell<<" ";
-		//}
-		//cerr<<endl;
-    //}
+	for(auto row : B.a){
+		for(auto cell : row){
+			cout<<cell<<" ";
+		}
+    }
 	return Y_test_transpose.a[0];
 }
 void solve(int argc,char* argv[]){
@@ -268,6 +267,8 @@ void solve(int argc,char* argv[]){
 	double cash = 0;
 	ofstream order("order_statistics.csv");
 	ofstream cashflow("daily_cashflow.csv");
+	order<<"Date,Order_dir,Quantity,Price"<<endl;
+	cashflow<<"Date,Cashflow"<<endl;
 	for(start;start<len(dates);start++){
 		if(predicted_price[start-offset] >= price[start]*((double)(100+p)/(double)100)){
 			if(position < x){
