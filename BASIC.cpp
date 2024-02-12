@@ -106,6 +106,10 @@ void solve(int argc,char* argv[]){
 	int x = stoi(argv[3]);
 	string start_date = argv[4];
 	int start = 0;
+	
+	
+	string name = string(argv[5]);
+	
 	for(int i=0;i<len(dates);i++){
 		if(comparable(dates[i]) >= comparable(start_date)){
 			start = i;
@@ -128,8 +132,8 @@ void solve(int argc,char* argv[]){
 			trend = 0;
 		}
 	}
-	ofstream order("order_statistics.csv");
-	ofstream cashflow("daily_cashflow.csv");
+	ofstream order(name+"order_statistics.csv");
+	ofstream cashflow(name+"daily_cashflow.csv");
 	order<<"Date,Order_dir,Quantity,Price"<<endl;
 	cashflow<<"Date,Cashflow"<<endl;
 	for(start;start<len(dates);start++){
@@ -167,7 +171,7 @@ void solve(int argc,char* argv[]){
 	order.close();
 	cashflow.close();
 	// Writing the final pnl
-	ofstream pnl("final_pnl.txt");
+	ofstream pnl(name+"final_pnl.txt");
 	pnl<<to_string(cash)<<endl;
 	pnl.close();
 }

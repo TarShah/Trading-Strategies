@@ -107,6 +107,7 @@ void solve(int argc,char* argv[]){
 	double oversold_threshold = stod(argv[4]);
 	double overbought_threshold = stod(argv[5]);
 	string start_date = argv[6];
+	string name = string(argv[7]);
 	int start = 0;
 	for(int i=0;i<len(dates);i++){
 		if(comparable(dates[i]) >= comparable(start_date)){
@@ -123,8 +124,8 @@ void solve(int argc,char* argv[]){
 		gain += max((double)0,price[i] - price[i-1]);
 		loss += min((double)0,price[i] - price[i-1]);
 	}
-	ofstream order("order_statistics.csv");
-	ofstream cashflow("daily_cashflow.csv");
+	ofstream order(name+"order_statistics.csv");
+	ofstream cashflow(name+"daily_cashflow.csv");
 	order<<"Date,Order_dir,Quantity,Price"<<endl;
 	cashflow<<"Date,Cashflow"<<endl;
 	for(start;start<len(dates);start++){
@@ -158,7 +159,7 @@ void solve(int argc,char* argv[]){
 	order.close();
 	cashflow.close();
 	// Writing the final pnl
-	ofstream pnl("final_pnl.txt");
+	ofstream pnl(name+"final_pnl.txt");
 	pnl<<to_string(cash)<<endl;
 	pnl.close();
 }

@@ -178,6 +178,9 @@ void solve(int argc,char* argv[]){
 	int x = stoi(argv[3]);
 	double adx_threshold = stod(argv[4]); 
 	string start_date = argv[5];
+	
+	string name = string(argv[6]);
+	
 	int start = 0;
 	for(int i=0;i<len(dates);i++){
 		if(comparable(dates[i]) >= comparable(start_date)){
@@ -188,8 +191,8 @@ void solve(int argc,char* argv[]){
 	ll position = 0;
 	double cash = 0;
 	double alph  = (double)2/(double)(n+1); 
-	ofstream order("order_statistics.csv");
-	ofstream cashflow("daily_cashflow.csv");
+	ofstream order(name+"order_statistics.csv");
+	ofstream cashflow(name+"daily_cashflow.csv");
 	order<<"Date,Order_dir,Quantity,Price"<<endl;
 	cashflow<<"Date,Cashflow"<<endl;
 	double TR = max({high[start]-low[start],abs(high[start]-price[start]),abs(low[start]-price[start])});
@@ -198,7 +201,9 @@ void solve(int argc,char* argv[]){
 	double ATR = TR;
 	double DI_plus = DM_plus/ATR;
 	double DI_minus = DM_minus/ATR;
-	double DX = ((DI_plus - DI_minus) / (DI_plus + DI_minus))*(double)100;
+	double DX;
+	if(DI_plus==0 and DI_minus==0) DX = 0;
+	else DX = ((DI_plus - DI_minus) / (DI_plus + DI_minus))*(double)100;
 	double ADX = DX;
 	for(start;start<len(dates);start++){
 		TR = max({high[start]-low[start],abs(high[start]-price[start-1]),abs(low[start]-price[start-1])});
@@ -207,30 +212,33 @@ void solve(int argc,char* argv[]){
 		ATR = alph*(TR - ATR) + ATR;
 		DI_plus = alph*((DM_plus/ATR) - DI_plus) + DI_plus;
 		DI_minus = alph*((DM_minus/ATR) - DI_minus) + DI_minus; 
-		DX = ((DI_plus - DI_minus) / (DI_plus + DI_minus))*(double)100;
+		if(DI_plus==0 and DI_minus==0) DX = 0;
+		else DX = ((DI_plus - DI_minus) / (DI_plus + DI_minus))*(double)100;
 		ADX = alph*(DX - ADX) + ADX;
-		if(ADX > adx_threshold){
-			if(position < x){
-				position++;
-				cash -= price[start];
-				order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
+		if(DI_plus!=0 or DI_minus!=0){
+			if(ADX > adx_threshold){
+				if(position < x){
+					position++;
+					cash -= price[start];
+					order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
+				}
 			}
-		}
-		if(ADX < adx_threshold){
-			if(position > -x){
-				position--;
-				cash += price[start];
-				order<<dates[start]<<","<<"SELL"<<","<<1<<","<<to_string(price[start])<<endl;
+			if(ADX < adx_threshold){
+				if(position > -x){
+					position--;
+					cash += price[start];
+					order<<dates[start]<<","<<"SELL"<<","<<1<<","<<to_string(price[start])<<endl;
+				}
 			}
 		}
 		cashflow<<dates[start]<<','<<to_string(cash)<<endl;
 	}
 	// Squaring off 
-	cash += price[len(price)-1]*position;
+	cash += (double)price[len(price)-1]*position;
 	order.close();
 	cashflow.close();
 	// Writing the final pnl
-	ofstream pnl("final_pnl.txt");
+	ofstream pnl(name+"final_pnl.txt");
 	pnl<<to_string(cash)<<endl;
 	pnl.close();
 }

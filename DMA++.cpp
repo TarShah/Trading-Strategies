@@ -120,6 +120,10 @@ void solve(int argc,char* argv[]){
 	double c2 = stod(argv[7]);
 	string start_date = argv[8];
 	int start = 0;
+	
+	
+	string name = string(argv[9]);
+	
 	for(int i=0;i<len(dates);i++){
 		if(comparable(dates[i]) >= comparable(start_date)){ // to change this.
 			start = i;
@@ -136,8 +140,8 @@ void solve(int argc,char* argv[]){
 	for(int i = start - (n-2);i<=start;i++){
 		sum_abs_change += abs(price[i] - price[i-1]);
 	}
-	ofstream order("order_statistics.csv");
-	ofstream cashflow("daily_cashflow.csv");
+	ofstream order(name+"order_statistics.csv");
+	ofstream cashflow(name+"daily_cashflow.csv");
 	order<<"Date,Order_dir,Quantity,Price"<<endl;
 	cashflow<<"Date,Cashflow"<<endl;
 	cashflow<<dates[start]<<','<<cash<<endl;
@@ -147,75 +151,87 @@ void solve(int argc,char* argv[]){
 		bool buy = false;
 		bool sell = false;
 		bool held = false;
+		bool held_sell = false;
+		bool held_buy = false; 
 		double price_change = abs(price[start] - price[start-n]);
 		sum_abs_change += abs(price[start] - price[start-1]);
 		ER = price_change/sum_abs_change;
 		SF = get_SF(SF,ER,c1,c2);
 		AMA = AMA + SF*(price[start] - AMA);
-		cout<<dates[start]<<" "<<AMA<<" "<<ER<<" "<<SF<<endl;
-		if(price[start] >= AMA*((double)(100+p) / 100)) buy = true;
-		if(price[start] <= AMA*((double)(100-p) / 100)) sell = true;
+		//cout<<dates[start]<<" "<<AMA<<" "<<ER<<" "<<SF<<endl;
+		if(price[start] >= AMA*((double)(100 + p) / (double)100)) buy = true;
+		if(price[start] <= AMA*((double)(100 - p) / (double)100)) sell = true;
 		if(!q.empty() and start - q.front().index == max_hold_days){
 			held = true;
+			if(q.front().type == "SELL") held_sell = true;
+			if(q.front().type == "BUY") held_buy = true;
 		}
-		if(held){
-			bool held_buy = false;
-			bool held_sell = false;
-			if(q.front().type == "LONG") held_sell = true;
-			if(q.front().type == "SHORT") held_buy = true;
+		if(buy){
 			if(held_sell){
-				if(buy){
-					q.pop();
-					q.push(ord{"LONG",start});
-				}
-				else{
+				if(position == x){
 					q.pop();
 					cash += price[start];
 					position--;
 					order<<dates[start]<<","<<"SELL"<<","<<1<<","<<to_string(price[start])<<endl;
 				}
-			}
-			if(held_buy){
-				if(sell){
-					q.pop();
-					q.push(ord{"SHORT",start});
-				}
 				else{
 					q.pop();
-					cash -= price[start];
-					position++;
-					order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
+					q.push(ord{"SELL",start});
 				}
 			}
-			buy = false;
-			sell = false;
-		}
-		else{
-			if(buy){
+			else{
 				if(position < x){
 					position++;
 					cash -= price[start];
 					order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
-					if(q.empty() or q.front().type=="LONG"){
-						q.push(ord{"LONG",start});
+					if(q.empty() or q.front().type=="SELL"){
+						q.push(ord{"SELL",start});
 					}
 					else{
 						q.pop();
 					}
 				}
 			}
-			if(sell){
+		}
+		else if(sell){
+			if(held_buy){
+				if(position == -x){
+					q.pop();
+					cash -= price[start];
+					position++;
+					order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
+				}
+				else{
+					q.pop();
+					q.push(ord{"BUY",start});
+				}
+			}
+			else{
 				if(position > -x){
 					position--;
 					cash += price[start];
 					order<<dates[start]<<","<<"SELL"<<","<<1<<","<<to_string(price[start])<<endl;
-					if(q.empty() or q.front().type=="SHORT"){
-						q.push(ord{"SHORT",start});
+					if(q.empty() or q.front().type=="BUY"){
+						q.push(ord{"BUY",start});
 					}
 					else{
 						q.pop();
 					}
 				}
+			}
+		}
+		else if(held){
+			if(held_buy){
+				q.pop();
+				cash -= price[start];
+				position++;
+				order<<dates[start]<<","<<"BUY"<<","<<1<<","<<to_string(price[start])<<endl;
+			}
+			if(held_sell){
+				q.pop();
+				cash += price[start];
+				position--;
+				order<<dates[start]<<","<<"SELL"<<","<<1<<","<<to_string(price[start])<<endl;
 			}
 		}
 		sum_abs_change -= abs(price[prev] - price[prev-1]);
@@ -227,7 +243,7 @@ void solve(int argc,char* argv[]){
 	order.close();
 	cashflow.close();
 	// Writing the final pnl
-	ofstream pnl("final_pnl.txt");
+	ofstream pnl(name+"final_pnl.txt");
 	pnl<<to_string(cash)<<endl;
 	pnl.close();
 }
