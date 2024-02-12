@@ -32,6 +32,11 @@ all:
 		python3 linear.py $(symbol) "$(start_date)" "$(end_date)" $(symbol); \
 		g++ LINEAR_REGRESSION.cpp -o LINEAR_REGRESSION; \
 		./LINEAR_REGRESSION $(symbol) $(x) $(p) "$(train_start_date)" "$(start_date)"; \
+	elif [ "$(strategy)" = "PAIRS" ]; then \
+		python3 get.py $(symbol1) "$(start_date)" "$(end_date)" $(shell echo $$(($(n)*3 + 10))); \
+		python3 get.py $(symbol2) "$(start_date)" "$(end_date)" $(shell echo $$(($(n)*3 + 10))); \
+		g++ PAIRS.cpp -o PAIRS; \
+		./PAIRS $(symbol1) $(symbol2) "$(start_date)" "$(end_date)" $(n) $(x) $(threshold) $(stop_loss_threshold) ; \
 	fi
 
 # Clean rule
