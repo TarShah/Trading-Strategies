@@ -61,37 +61,37 @@ In this document, we analyze and compare various trading strategies implemented 
 | ---------------------- | ---------------------- |
 | ![im1](images/SBIN_01-01-2023.png) | ![im2](images/SBIN_01-01-2024.png) |
 
-- **HDFCLIFE**:
+- **CIPLA**:
 
 | 01-01-2019              | 01-01-2020              |
 | ---------------------- | ---------------------- |
-| ![im1](images/HDFCLIFE_01-01-2019.png) | ![im2](images/HDFCLIFE_01-01-2020.png) |
+| ![im1](images/CIPLA_01-01-2019.png) | ![im2](images/CIPLA_01-01-2020.png) |
 
 
 | 01-01-2021              | 01-01-2022              |
 | ---------------------- | ---------------------- |
-| ![im1](images/HDFCLIFE_01-01-2021.png) | ![im2](images/HDFCLIFE_01-01-2022.png) |
+| ![im1](images/CIPLA_01-01-2021.png) | ![im2](images/CIPLA_01-01-2022.png) |
 
 
 | 01-01-2023              | 01-01-2024              |
 | ---------------------- | ---------------------- |
-| ![im1](images/HDFCLIFE_01-01-2023.png) | ![im2](images/HDFCLIFE_01-01-2024.png) |
+| ![im1](images/CIPLA_01-01-2023.png) | ![im2](images/CIPLA_01-01-2024.png) |
 
-- **COALINDIA**:
+- **ITC**:
 
 | 01-01-2019              | 01-01-2020              |
 | ---------------------- | ---------------------- |
-| ![im1](images/COALINDIA_01-01-2019.png) | ![im2](images/COALINDIA_01-01-2020.png) |
+| ![im1](images/ITC_01-01-2019.png) | ![im2](images/ITC_01-01-2020.png) |
 
 
 | 01-01-2021              | 01-01-2022              |
 | ---------------------- | ---------------------- |
-| ![im1](images/COALINDIA_01-01-2021.png) | ![im2](images/COALINDIA_01-01-2022.png) |
+| ![im1](images/ITC_01-01-2021.png) | ![im2](images/ITC_01-01-2022.png) |
 
 
 | 01-01-2023              | 01-01-2024              |
 | ---------------------- | ---------------------- |
-| ![im1](images/COALINDIA_01-01-2023.png) | ![im2](images/COALINDIA_01-01-2024.png) |
+| ![im1](images/ITC_01-01-2023.png) | ![im2](images/ITC_01-01-2024.png) |
 
 - **AXISBANK**:
 
