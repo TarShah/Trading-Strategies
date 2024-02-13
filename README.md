@@ -48,6 +48,8 @@ Each of the following images displays the performance of different trading strat
 - **X-axis:** Time (in years from the corresponding title date)
 - **Y-axis:** Final PNL (Profit and Loss) by each method, with parameters similar to the "best_of_all" strategy.
 
+We have created different curves with varying end dates. During our analysis, we found that the step where we square off at the last trading date plays a significant role. This is motivated by the fact that in some cases in daily_cash_flow, the last entry was positive, but the value in final_pnl.txt was negative, thus implying that the last day's price can change profit to loss and loss to profit.
+
 Note: In some curves, all lines become straight after a specific time. This occurs because the jugaad-data library is unable to provide data over that period.
 
 - **SBIN**:
