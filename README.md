@@ -124,8 +124,13 @@ In this document, we analyze and compare various trading strategies implemented 
 | ---------------------- | ---------------------- |
 | ![im1](images/UPL_01-01-2023.png) | ![im2](images/UPL_01-01-2024.png) |
 
+## Trends observed
+- When observed for a short period of time (eg. for around 2 years) all the algorithms gives almost the same result beight centered around zero.
+- When we start analyzing them over a large duration of time RSI almost always stands out after a large period of time, it is even the best strategy in most of the cases.
+- MACD performs very poor in most of the cases except for one UPL
+- After analyis of their closing price curve alnog with the trends of the algorithm, we concluded that for companies which are in downfall MACD performs the bes while for for companies which are rising RSI performs teh best when analyzed over a large period of time.
 
-## Analysis and Insights
+## Analysis and Insights of algorithm
 
 - **Performance Evaluation**: 
   - Each strategy's performance can be evaluated based on metrics such as profit/loss, Sharpe ratio, maximum drawdown, etc.
