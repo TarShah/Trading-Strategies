@@ -46,7 +46,7 @@ void extract_data(string symbol,string column_name,vector<string>& column){
                 cerr << "Target column not found!"<<endl;
                 return;
             }
-        } 
+        }
         else {
             stringstream ss(line);
             string cell;
@@ -69,7 +69,7 @@ void solve1(string start,string end,int period,double threshold, string symbol_1
     
     double sum = 0; // to store the sum of spreads of last n(period) days
     double sum_power_2 = 0; // to store the sum of square of spreads of last n(period) days
-    
+   
     ofstream daily_cashflow("daily_cashflow.csv");
     ofstream order_statistics_1("order_statistics_1.csv");
     ofstream order_statistics_2("order_statistics_2.csv");
@@ -99,8 +99,10 @@ void solve1(string start,string end,int period,double threshold, string symbol_1
     for(int iterator = 0;iterator<period;iterator++)
     {
         sum+=spread[index];
+        
         sum_power_2+=(spread[index]*spread[index]);
         index--;
+        
     }
     index = dummy;
     
@@ -112,14 +114,12 @@ void solve1(string start,string end,int period,double threshold, string symbol_1
    
     while(date[index]<=end_date and index<date.size()){
         
-        
+       
         double mean  = sum/period;
         double standard_deviation = sqrt((sum_power_2/period)-(mean*mean));
         double z_score = (spread[index]-mean)/standard_deviation;
         double cash_flow = 0;
-        
-       // cout<<date[index]<<" "<<sum<<" "<<sum_power_2<<" "<<mean<<" "<<standard_deviation<<" "<<z_score<<endl;
-        
+       
         if(z_score>threshold){
             if(pos_stock_1>-x and pos_stock_2<x){
                 order_statistics_1<<change_format_ddmmyyyy(date[index]);
@@ -214,6 +214,13 @@ void fill_data(string symbol_1, string symbol_2)
     extract_data(symbol_1, "CLOSE", dum_price_1);
     extract_data(symbol_2, "DATE", dum_dates_2);
     extract_data(symbol_2, "CLOSE", dum_price_2);
+   
+    
+    
+    reverse(dum_dates_1.begin(),dum_dates_1.end());
+    reverse(dum_price_1.begin(),dum_price_1.end());
+    reverse(dum_price_2.begin(),dum_price_2.end());
+    reverse(dum_dates_2.begin(),dum_dates_2.end());
     
     // now i will be applying filter on these dum vectors as there may be some date which are in dum_dates_1 but not in dum_dates_2
     int index_1 = 0;
@@ -229,18 +236,17 @@ void fill_data(string symbol_1, string symbol_2)
         }
         else if(dum_dates_1[index_1]<dum_dates_2[index_2]){
             index_1++;
+           
         }
         else{
             //dum_dates_1[index_1]>dum_dates_2[index_2]
             index_2++;
+            
         }
         
     }
     
-    reverse(date.begin(),date.end());
-    reverse(price_1.begin(),price_1.end());
-    reverse(price_2.begin(),price_2.end());
-    reverse(spread.begin(),spread.end());
+
 }
 
 
@@ -293,11 +299,13 @@ void solve2(string start,string end,int period,double threshold, string symbol_1
     int cur_previous_index = 0; // starting index for data to be analyzed
     
     while(date[index]<=end_date and index<date.size()){
+    
+    
+    
         double mean  = sum/period;
         double standard_deviation = sqrt((sum_power_2/period)-(mean*mean));
         double z_score = (spread[index]-mean)/standard_deviation;
         double cash_flow = 0;
-        
         
         int signal_type = -1; // if it is 1 then sell signal else if it is 0 buy signal
         int quan_sell = 0;
@@ -307,13 +315,18 @@ void solve2(string start,string end,int period,double threshold, string symbol_1
             signal_type=1;
             if(pos_stock_1>-x and pos_stock_2<x){
                 quan_sell = 1;
+                pos_stock_1--;
+                pos_stock_2++;
             }
         }
         else if(z_score<-threshold){
             signal_type=0;
+           
             if(pos_stock_1<x and pos_stock_2>-x)
             {
                 quan_buy = 1;
+                pos_stock_1++;
+                pos_stock_2--;
             }
         }
         if(signal_type==1 and quan_sell>0)
@@ -330,9 +343,9 @@ void solve2(string start,string end,int period,double threshold, string symbol_1
             
             
         }
-        if(signal_type==0 and quan_sell>0){
+        if(signal_type==0 and quan_buy>0){
             if(cur_previous_index==previous_data.size() ){
-                previous_data.push_back({1,mean,standard_deviation});
+                previous_data.push_back({0,mean,standard_deviation});
             }
             else if (previous_data[cur_previous_index][0]==0){
                 previous_data.push_back({0,mean,standard_deviation});
@@ -345,21 +358,25 @@ void solve2(string start,string end,int period,double threshold, string symbol_1
         vector<vector<double>> new_previous_data;
         for(int i = cur_previous_index;i<previous_data.size();i++)
         {
-            double new_z_score = (spread[index]-previous_data[cur_previous_index][1])/previous_data[cur_previous_index][2];
-            if(abs(new_z_score)>abs(stop_loss))
+            double new_z_score = (spread[index]-previous_data[i][1])/previous_data[i][2];
+            
+            if(previous_data[i][0]==1 and new_z_score>stop_loss )
             {
-                if(previous_data[cur_previous_index][0]==1)
-                {
-                    quan_buy++;
-                }
-                else
-                {
-                    quan_sell++;
-                }
+                
+                quan_buy++;
+                pos_stock_1++;
+                pos_stock_2--;
+            }
+            else if(previous_data[i][0]==0 and new_z_score<-stop_loss )
+            {
+                
+                quan_sell++;
+                pos_stock_1--;
+                pos_stock_2++;
             }
             else
             {
-                new_previous_data.push_back(previous_data[cur_previous_index]);
+                new_previous_data.push_back(previous_data[i]);
             }
             
         }
@@ -378,8 +395,8 @@ void solve2(string start,string end,int period,double threshold, string symbol_1
         }
         if(quan_sell>0)
         {
-            if(pos_stock_1>-x and pos_stock_2<x)
-            {
+            
+             
                 order_statistics_1<<change_format_ddmmyyyy(date[index]);
                 order_statistics_1<<",";
                 order_statistics_1<<"SELL,";
@@ -398,12 +415,11 @@ void solve2(string start,string end,int period,double threshold, string symbol_1
                 
                 cash_flow+=(price_1[index]*quan_sell);
                 cash_flow-=(price_2[index]*quan_sell);
-                pos_stock_1-=quan_sell;
-                pos_stock_2+=quan_sell;
-            }
+                
+            
         }
         if(quan_buy>0){
-            if(pos_stock_1<x and pos_stock_2>-x){
+           
                 order_statistics_1<<change_format_ddmmyyyy(date[index]);
                 order_statistics_1<<",";
                 order_statistics_1<<"BUY,";
@@ -424,9 +440,7 @@ void solve2(string start,string end,int period,double threshold, string symbol_1
                 
                 cash_flow-=(price_1[index]*quan_buy);
                 cash_flow+=(price_2[index]*quan_buy);
-                pos_stock_1+=quan_buy;
-                pos_stock_2-=quan_buy;
-            }
+                
             
         }
         
@@ -483,7 +497,8 @@ int main(int argc, char * argv[]) {
     
     fill_data(symbol_1,symbol_2);
     
- 
+ //make strategy=PAIRS symbol1=SBIN symbol2=ADANIENT x=5 n=20 threshold=2
+ //   stop_loss_threshold=4 start_date="a" end_date="b"
     
     if(argc== 8 or (string(argv[8])==""))
     {
