@@ -42,6 +42,14 @@ In this document, we analyze and compare various trading strategies implemented 
 ### 9. Stop-Loss in Pairs Trading Strategy
 - Implements loss-based stop-loss in pairs trading strategy.
 - Closes position when z-score crosses stop_loss_threshold.
+## Graphical Analysis
+- **SBIN**:
+![Example Image](images/SBIN_01-01-2019.png)
+![Example Image](images/SBIN_01-01-2020.png)
+![Example Image](images/SBIN_01-01-2021.png)
+![Example Image](images/SBIN_01-01-2022.png)
+![Example Image](images/SBIN_01-01-2023.png)
+![Example Image](images/SBIN_01-01-2024.png)
 
 ## Analysis and Insights
 
