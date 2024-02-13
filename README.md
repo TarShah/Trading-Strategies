@@ -43,35 +43,86 @@ In this document, we analyze and compare various trading strategies implemented 
 - Implements loss-based stop-loss in pairs trading strategy.
 - Closes position when z-score crosses stop_loss_threshold.
 ## Graphical Analysis
+- in each of the following images x axis we have time (in years from then date in their corresponding title) and on y axis is the corresponding entry in final_pnl.txt by each of teh method, parameters are as in best_of_all strategy
 - **SBIN**:
-| ![Image 1](images/SBIN_01-01-2021.png) | ![Image 2](images/SBIN_01-01-2022.png) |
-|:--:|:--:|
-| 01-01-2021 | 01-01-2022 |
+
+| 01-01-2019              | 01-01-2020              |
+| ---------------------- | ---------------------- |
+| ![im1](images/SBIN_01-01-2019.png) | ![im2](images/SBIN_01-01-2020.png) |
 
 
-| im1              | im2               |
+| 01-01-2021              | 01-01-2022              |
 | ---------------------- | ---------------------- |
 | ![im1](images/SBIN_01-01-2021.png) | ![im2](images/SBIN_01-01-2022.png) |
-<div style="display: flex; justify-content: center;">
-  <div style="flex: 1; text-align: center;">
-    <img src="images/SBIN_01-01-2021.png" width="400" height="300" />
-    <p>01-01-2021</p>
-  </div>
-  <div style="flex: 1; text-align: center;">
-    <img src="images/SBIN_01-01-2022.png" width="400" height="300" />
-    <p>01-01-2022</p>
-  </div>
-</div>
-<div style="display: flex; justify-content: center;">
-  <div style="flex: 1; text-align: center;">
-    <img src="images/SBIN_01-01-2023.png" width="400" height="300" />
-    <p>01-01-2019</p>
-  </div>
-  <div style="flex: 1; text-align: center;">
-    <img src="images/SBIN_01-01-2024.png" width="400" height="300" />
-    <p>01-01-2020</p>
-  </div>
-</div>
+
+
+| 01-01-2023              | 01-01-2024              |
+| ---------------------- | ---------------------- |
+| ![im1](images/SBIN_01-01-2023.png) | ![im2](images/SBIN_01-01-2024.png) |
+
+- **HDFCLIFE**:
+
+| 01-01-2019              | 01-01-2020              |
+| ---------------------- | ---------------------- |
+| ![im1](images/HDFCLIFE_01-01-2019.png) | ![im2](images/HDFCLIFE_01-01-2020.png) |
+
+
+| 01-01-2021              | 01-01-2022              |
+| ---------------------- | ---------------------- |
+| ![im1](images/HDFCLIFE_01-01-2021.png) | ![im2](images/HDFCLIFE_01-01-2022.png) |
+
+
+| 01-01-2023              | 01-01-2024              |
+| ---------------------- | ---------------------- |
+| ![im1](images/HDFCLIFE_01-01-2023.png) | ![im2](images/HDFCLIFE_01-01-2024.png) |
+
+- **COALINDIA**:
+
+| 01-01-2019              | 01-01-2020              |
+| ---------------------- | ---------------------- |
+| ![im1](images/COALINDIA_01-01-2019.png) | ![im2](images/COALINDIA_01-01-2020.png) |
+
+
+| 01-01-2021              | 01-01-2022              |
+| ---------------------- | ---------------------- |
+| ![im1](images/COALINDIA_01-01-2021.png) | ![im2](images/COALINDIA_01-01-2022.png) |
+
+
+| 01-01-2023              | 01-01-2024              |
+| ---------------------- | ---------------------- |
+| ![im1](images/COALINDIA_01-01-2023.png) | ![im2](images/COALINDIA_01-01-2024.png) |
+
+- **AXISBANK**:
+
+| 01-01-2019              | 01-01-2020              |
+| ---------------------- | ---------------------- |
+| ![im1](images/AXISBANK_01-01-2019.png) | ![im2](images/AXISBANK_01-01-2020.png) |
+
+
+| 01-01-2021              | 01-01-2022              |
+| ---------------------- | ---------------------- |
+| ![im1](images/AXISBANK_01-01-2021.png) | ![im2](images/AXISBANK_01-01-2022.png) |
+
+
+| 01-01-2023              | 01-01-2024              |
+| ---------------------- | ---------------------- |
+| ![im1](images/AXISBANK_01-01-2023.png) | ![im2](images/AXISBANK_01-01-2024.png) |
+- **UPL**:
+
+| 01-01-2019              | 01-01-2020              |
+| ---------------------- | ---------------------- |
+| ![im1](images/UPL_01-01-2019.png) | ![im2](images/UPL_01-01-2020.png) |
+
+
+| 01-01-2021              | 01-01-2022              |
+| ---------------------- | ---------------------- |
+| ![im1](images/UPL_01-01-2021.png) | ![im2](images/UPL_01-01-2022.png) |
+
+
+| 01-01-2023              | 01-01-2024              |
+| ---------------------- | ---------------------- |
+| ![im1](images/UPL_01-01-2023.png) | ![im2](images/UPL_01-01-2024.png) |
+
 
 ## Analysis and Insights
 
