@@ -45,11 +45,11 @@ In this document, we analyze and compare various trading strategies implemented 
 ## Graphical Analysis
 - **SBIN**:
 <div style="display: flex; justify-content: center;">
-  <div style="flex: 1; text-align: center;">
+  <div style="flex: 1; text-align: left;">
     <img src="images/SBIN_01-01-2019.png" width="400" height="300" />
     <p>01-01-2019 1</p>
   </div>
-  <div style="flex: 1; text-align: center;">
+  <div style="flex: 1; text-align: right;">
     <img src="images/SBIN_01-01-2020.png" width="400" height="300" />
     <p>01-01-2020</p>
   </div>
