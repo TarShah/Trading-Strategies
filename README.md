@@ -44,7 +44,7 @@ In this document, we analyze and compare various trading strategies implemented 
 - Closes position when z-score crosses stop_loss_threshold.
 ## Graphical Analysis
 - **SBIN**:
-| ![Image 1](images/SBIN_01-01-2021.png) | ![Image 2](iamges/SBIN_01-01-2022.png) |
+| ![Image 1](images/SBIN_01-01-2021.png) | ![Image 2](images/SBIN_01-01-2022.png) |
 |:--:|:--:|
 | 01-01-2021 | 01-01-2022 |
 <div style="display: flex; justify-content: center;">
