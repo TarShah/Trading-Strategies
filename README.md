@@ -44,15 +44,36 @@ In this document, we analyze and compare various trading strategies implemented 
 - Closes position when z-score crosses stop_loss_threshold.
 ## Graphical Analysis
 - **SBIN**:
-- <p align="center">
-  <img src="images/SBIN_01-01-2019.png" width="400" height="300" />
-  <img src="images/SBIN_01-01-2020.png" width="400" height="300" />
-</p>
-
-![Example Image](images/SBIN_01-01-2021.png)
-![Example Image](images/SBIN_01-01-2022.png)
-![Example Image](images/SBIN_01-01-2023.png)
-![Example Image](images/SBIN_01-01-2024.png)
+<div style="display: flex; justify-content: center;">
+  <div style="flex: 1; text-align: center;">
+    <img src="images/SBIN_01-01-2019.png" width="400" height="300" />
+    <p>01-01-2019 1</p>
+  </div>
+  <div style="flex: 1; text-align: center;">
+    <img src="images/SBIN_01-01-2020.png" width="400" height="300" />
+    <p>01-01-2020</p>
+  </div>
+</div>
+<div style="display: flex; justify-content: center;">
+  <div style="flex: 1; text-align: center;">
+    <img src="images/SBIN_01-01-2021.png" width="400" height="300" />
+    <p>01-01-2021 1</p>
+  </div>
+  <div style="flex: 1; text-align: center;">
+    <img src="images/SBIN_01-01-2022.png" width="400" height="300" />
+    <p>01-01-2022</p>
+  </div>
+</div>
+<div style="display: flex; justify-content: center;">
+  <div style="flex: 1; text-align: center;">
+    <img src="images/SBIN_01-01-2023.png" width="400" height="300" />
+    <p>01-01-2019 1</p>
+  </div>
+  <div style="flex: 1; text-align: center;">
+    <img src="images/SBIN_01-01-2024.png" width="400" height="300" />
+    <p>01-01-2020</p>
+  </div>
+</div>
 
 ## Analysis and Insights
 
