@@ -47,6 +47,11 @@ In this document, we analyze and compare various trading strategies implemented 
 | ![Image 1](images/SBIN_01-01-2021.png) | ![Image 2](images/SBIN_01-01-2022.png) |
 |:--:|:--:|
 | 01-01-2021 | 01-01-2022 |
+
+
+| im1              | im2               |
+| ---------------------- | ---------------------- |
+| ![im1](images/SBIN_01-01-2021.png) | ![im2](images/SBIN_01-01-2022.png) |
 <div style="display: flex; justify-content: center;">
   <div style="flex: 1; text-align: center;">
     <img src="images/SBIN_01-01-2021.png" width="400" height="300" />
