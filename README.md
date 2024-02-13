@@ -44,6 +44,7 @@ In this document, we analyze and compare various trading strategies implemented 
 - Closes position when z-score crosses stop_loss_threshold.
 ## Graphical Analysis
 - in each of the following images x axis we have time (in years from then date in their corresponding title) and on y axis is the corresponding entry in final_pnl.txt by each of teh method, parameters are as in best_of_all strategy
+- in some curves all teh lines are straight lines after specific time this is becuse jugaad-data library is unable to provide data over that period of time
 - **SBIN**:
 
 | 01-01-2019              | 01-01-2020              |
