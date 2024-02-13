@@ -43,8 +43,13 @@ In this document, we analyze and compare various trading strategies implemented 
 - Implements loss-based stop-loss in pairs trading strategy.
 - Closes position when z-score crosses stop_loss_threshold.
 ## Graphical Analysis
-- in each of the following images x axis we have time (in years from then date in their corresponding title) and on y axis is the corresponding entry in final_pnl.txt by each of teh method, parameters are as in best_of_all strategy
-- in some curves all teh lines are straight lines after specific time this is becuse jugaad-data library is unable to provide data over that period of time
+Each of the following images displays the performance of different trading strategies over time.
+
+- **X-axis:** Time (in years from the corresponding title date)
+- **Y-axis:** Final PNL (Profit and Loss) by each method, with parameters similar to the "best_of_all" strategy.
+
+Note: In some curves, all lines become straight after a specific time. This occurs because the jugaad-data library is unable to provide data over that period.
+
 - **SBIN**:
 
 | 01-01-2019              | 01-01-2020              |
@@ -125,10 +130,17 @@ In this document, we analyze and compare various trading strategies implemented 
 | ![im1](images/UPL_01-01-2023.png) | ![im2](images/UPL_01-01-2024.png) |
 
 ## Trends observed
-- When observed for a short period of time (eg. for around 2 years) all the algorithms gives almost the same result beight centered around zero.
-- When we start analyzing them over a large duration of time RSI almost always stands out after a large period of time, it is even the best strategy in most of the cases.
-- MACD performs very poor in most of the cases except for one, UPL.
-- After analyis of their closing price curve alnog with the trends of the algorithm, we concluded that for companies which are in downfall MACD performs the bes while for for companies which are rising RSI performs the best when analyzed over a large period of time.
+- **Short-Term Analysis:**
+  - When observed for a short period of time (e.g., around 2 years), all the algorithms give almost the same result being centered around zero.
+
+- **Long-Term Analysis:**
+  - When analyzing over a large duration of time, RSI almost always stands out as the best strategy, outperforming others in most cases.
+  - MACD performs poorly in most cases, except for one exception - UPL.
+
+- **Analysis of Trends:**
+  - After analyzing the closing price curve along with the trends of the algorithm, we concluded that:
+    - For companies experiencing a downturn, MACD performs the best.
+    - For companies on the rise, RSI performs the best when analyzed over a large period of time.
 
 ## Analysis and Insights of algorithm
 
